@@ -1,2 +1,2 @@
 [config]
-command=bash chmod +x ./deploy.sh && ./deploy.sh
+command=bash deploy-azure.sh
