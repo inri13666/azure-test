@@ -1,11 +1,85 @@
 {
-    "name": "akuma/azure-test",
+    "name": "mesav/demo",
+    "license": "proprietary",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "AppBundle\\": "src/AppBundle"
+        },
+        "classmap": [
+            "app/AppKernel.php",
+            "app/AppCache.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        },
+        "files": [
+            "vendor/symfony/symfony/src/Symfony/Component/VarDumper/Resources/functions/dump.php"
+        ]
+    },
     "require": {
-        "php": ">=5.5.9"
+        "php": ">=5.5.9",
+        "doctrine/doctrine-bundle": "^1.6",
+        "doctrine/orm": "^2.5",
+        "incenteev/composer-parameter-handler": "^2.1",
+        "sensio/distribution-bundle": "^5.0.19",
+        "sensio/framework-extra-bundle": "^5.0.0",
+        "symfony/monolog-bundle": "^3.1.0",
+        "symfony/polyfill-apcu": "^1.0",
+        "symfony/swiftmailer-bundle": "^2.6.4",
+        "symfony/symfony": "3.4.*",
+        "twig/twig": "^1.0||^2.0"
+    },
+    "require-dev": {
+        "sensio/generator-bundle": "^3.0",
+        "symfony/phpunit-bridge": "^3.0"
+    },
+    "scripts": {
+        "symfony-scripts": [
+            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
+        ],
+        "post-install-cmd": [
+            "@symfony-scripts"
+        ],
+        "post-update-cmd": [
+            "@symfony-scripts"
+        ]
     },
     "config": {
-        "preferred-install": "dist"
+        "sort-packages": true
     },
-    "minimum-stability": "dev",
-    "prefer-stable": true
+    "extra": {
+        "symfony-app-dir": "app",
+        "symfony-bin-dir": "bin",
+        "symfony-var-dir": "var",
+        "symfony-web-dir": "web",
+        "symfony-tests-dir": "tests",
+        "symfony-assets-install": "relative",
+        "incenteev-parameters": {
+            "file": "app/config/parameters.yml",
+			"env-map": {
+                "database_driver": "SYMFONY_DATABASE_DRIVER",
+                "database_host": "SYMFONY_DATABASE_HOST",
+                "database_port": "SYMFONY_DATABASE_PORT",
+                "database_name": "SYMFONY_DATABASE_NAME",
+                "database_user": "SYMFONY_DATABASE_USER",
+                "database_password": "SYMFONY_DATABASE_PASSWORD",
+                "mailer_transport": "SYMFONY_MAILER_TRANSPORT",
+                "mailer_host": "SYMFONY_MAILER_HOST",
+                "mailer_port": "SYMFONY_MAILER_PORT",
+                "mailer_user": "SYMFONY_MAILER_USER",
+                "mailer_password": "SYMFONY_MAILER_PASSWORD",
+                "secret": "SYMFONY_SECRET",
+                "default_locale": "SYMFONY_DEFAULT_LOCALE"
+            } 
+        },
+        "branch-alias": null
+    }
 }
