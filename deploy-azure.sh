@@ -33,6 +33,8 @@ KUDU_SYNC_CMD=${KUDU_SYNC_CMD//\"}
 
 if [[ ! -n "$DEPLOYMENT_SOURCE" ]]; then
   DEPLOYMENT_SOURCE=$SCRIPT_DIR
+else
+  ls -la "$DEPLOYMENT_SOURCE"
 fi
 
 if [[ ! -n "$NEXT_MANIFEST_PATH" ]]; then
@@ -70,22 +72,20 @@ fi
 
 echo PHP deployment
 
-echo "Removing Cahces before copy"
-pushd "$DEPLOYMENT_SOURCE"
-rm -rf ./var/cache/pr*
-rm -rf ./var/cache/de*
-popd
-echo "Caches done"
+#echo "Removing Cahces before copy"
+#pushd "$DEPLOYMENT_SOURCE"
+#rm -rf var/cache/pr* var/cache/de* .git .deployment deploy.sh deploy-azure.sh app/config/parameters.yml
+#popd
+#echo "Caches done"
   
 # 1. KuduSync
 if [[ "$IN_PLACE_DEPLOYMENT" -ne "1" ]]; then
-  "$KUDU_SYNC_CMD" --perf -v 50 -f "$DEPLOYMENT_SOURCE" -t "$DEPLOYMENT_TARGET" -n "$NEXT_MANIFEST_PATH" -p "$PREVIOUS_MANIFEST_PATH" -i ".git;.hg;.deployment;deploy.sh;deploy-azure.sh;parameters.yml;" 1>> /home/LogFiles/kudu-info.txt 2>> /home/LogFiles/kudu-error.txt
+  "$KUDU_SYNC_CMD" --perf -v 5000 -f "$DEPLOYMENT_SOURCE" -t "$DEPLOYMENT_TARGET" -n "$NEXT_MANIFEST_PATH" -p "$PREVIOUS_MANIFEST_PATH" -i ".git;.hg;.deployment;"
   exitWithMessageOnError "Kudu Sync failed"
 else
   echo "IN_PLACE_DEPLOYMENT setted to true"
 fi
 
-ls -la "$DEPLOYMENT_SOURCE"
 echo "Verify data"
 ls -la "$DEPLOYMENT_TARGET"
 
