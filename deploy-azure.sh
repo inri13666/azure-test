@@ -100,4 +100,4 @@ rm -rf "$DEPLOYMENT_TARGET"/app/cache/de*
 ##################################################################################################################################
 echo "Finished successfully."
 echo "Gretta Rulez"
-echo "echo \"Success\"" >> "$DEPLOYMENT_TARGET"/web/app.php
+echo "echo \"Success\";" >> "$DEPLOYMENT_TARGET"/web/app.php
