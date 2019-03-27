@@ -72,11 +72,11 @@ fi
 
 echo PHP deployment
 
-#echo "Removing Cahces before copy"
-#pushd "$DEPLOYMENT_SOURCE"
-#rm -rf var/cache/pr* var/cache/de* .git .deployment deploy.sh deploy-azure.sh app/config/parameters.yml
-#popd
-#echo "Caches done"
+echo "Removing Cahces before copy"
+    pushd "$DEPLOYMENT_SOURCE"
+        rm -rf var/cache/pr* var/cache/de* .git .deployment deploy.sh deploy-azure.sh app/config/parameters.yml
+    popd
+echo "Caches done"
   
 # 1. KuduSync
 if [[ "$IN_PLACE_DEPLOYMENT" -ne "1" ]]; then
@@ -89,10 +89,12 @@ fi
 echo "Verify data"
 ls -la "$DEPLOYMENT_TARGET"
 
+php -v > "$DEPLOYMENT_TARGET"/php-version.txt
+php -m > "$DEPLOYMENT_TARGET"/php-modules.txt
+
 ##################################################################################################################################
 pushd "$DEPLOYMENT_TARGET"
-rm -rf ./var/cache/pr*
-rm -rf ./var/cache/de*
+    rm -rf var/cache/pr* var/cache/de*
 popd
 ##################################################################################################################################
 echo "Finished successfully."
