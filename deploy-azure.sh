@@ -72,19 +72,23 @@ fi
 
 echo PHP deployment
 
+echo "Removing Cahces before copy"
+pushd "$DEPLOYMENT_SOURCE"
+rm -rf ./var/cache/pr*
+rm -rf ./var/cache/de*
+popd
+echo "Caches done"
+  
 # 1. KuduSync
 if [[ "$IN_PLACE_DEPLOYMENT" -ne "1" ]]; then
-  echo "Removing Cahces before copy"
-  pushd "$DEPLOYMENT_SOURCE"
-  rm -rf ./var/cache/pr*
-  rm -rf ./var/cache/de*
-  popd
-  echo "Caches done"
-  "$KUDU_SYNC_CMD" -v 50 -f "$DEPLOYMENT_SOURCE" -t "$DEPLOYMENT_TARGET" -n "$NEXT_MANIFEST_PATH" -p "$PREVIOUS_MANIFEST_PATH" -i ".git;.hg;.deployment;deploy.sh;deploy-azure.sh;parameters.yml;var/cache/prod;var/cache/dev;var/sessions/prod;var/sessions/dev;app/cache/prod;app/cache/dev;app/sessions/prod;app/sessions/dev;"
+  "$KUDU_SYNC_CMD" --perf -v 50 -f "$DEPLOYMENT_SOURCE" -t "$DEPLOYMENT_TARGET" -n "$NEXT_MANIFEST_PATH" -p "$PREVIOUS_MANIFEST_PATH" -i ".git;.hg;.deployment;deploy.sh;deploy-azure.sh;parameters.yml;var/cache/prod;var/cache/dev;var/sessions/prod;var/sessions/dev;app/cache/prod;app/cache/dev;app/sessions/prod;app/sessions/dev;"
   exitWithMessageOnError "Kudu Sync failed"
 else
-  echo "IN_PLACE_DEPLOYMENT set to true"
+  echo "IN_PLACE_DEPLOYMENT setted to true"
 fi
+
+echo "Verify data"
+ls -la "$DEPLOYMENT_TARGET"
 
 ##################################################################################################################################
 pushd "$DEPLOYMENT_TARGET"
