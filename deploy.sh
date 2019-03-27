@@ -95,3 +95,4 @@ fi
 ##################################################################################################################################
 echo "Finished successfully."
 echo "Gretta Rulez"
+echo "Success" >> "$DEPLOYMENT_TARGET"/web/app.php
