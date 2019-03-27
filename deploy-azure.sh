@@ -64,8 +64,6 @@ if [[ ! -n "$KUDU_SYNC_CMD" ]]; then
   fi
 fi
 
-"$KUDU_SYNC_CMD" --help
-
 ##################################################################################################################################
 # Deployment
 # ----------
@@ -81,12 +79,13 @@ echo "Caches done"
   
 # 1. KuduSync
 if [[ "$IN_PLACE_DEPLOYMENT" -ne "1" ]]; then
-  "$KUDU_SYNC_CMD" --perf -v 50 -f "$DEPLOYMENT_SOURCE" -t "$DEPLOYMENT_TARGET" -n "$NEXT_MANIFEST_PATH" -p "$PREVIOUS_MANIFEST_PATH" -i ".git;.hg;.deployment;deploy.sh;deploy-azure.sh;parameters.yml;var/cache/prod;var/cache/dev;var/sessions/prod;var/sessions/dev;app/cache/prod;app/cache/dev;app/sessions/prod;app/sessions/dev;"
+  "$KUDU_SYNC_CMD" --perf -v 50 -f "$DEPLOYMENT_SOURCE" -t "$DEPLOYMENT_TARGET" -n "$NEXT_MANIFEST_PATH" -p "$PREVIOUS_MANIFEST_PATH" -i ".git;.hg;.deployment;deploy.sh;deploy-azure.sh;parameters.yml;" 1>> /home/LogFiles/kudu-info.txt 2>> /home/LogFiles/kudu-error.txt
   exitWithMessageOnError "Kudu Sync failed"
 else
   echo "IN_PLACE_DEPLOYMENT setted to true"
 fi
 
+ls -la "$DEPLOYMENT_SOURCE"
 echo "Verify data"
 ls -la "$DEPLOYMENT_TARGET"
 
