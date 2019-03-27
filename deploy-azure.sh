@@ -72,7 +72,9 @@ echo PHP deployment
 
 # 1. KuduSync
 if [[ "$IN_PLACE_DEPLOYMENT" -ne "1" ]]; then
-  "$KUDU_SYNC_CMD" -v 50 -f "$DEPLOYMENT_SOURCE" -t "$DEPLOYMENT_TARGET" -n "$NEXT_MANIFEST_PATH" -p "$PREVIOUS_MANIFEST_PATH" -i ".git;.hg;.deployment;deploy.sh;var/cache/prod;var/cache/dev;var/sessions/prod;var/sessions/dev;"
+  rm -rf "$DEPLOYMENT_SOURCE"/app/cache/pr*
+  rm -rf "$DEPLOYMENT_SOURCE"/app/cache/de*
+  "$KUDU_SYNC_CMD" -v 50 -f "$DEPLOYMENT_SOURCE" -t "$DEPLOYMENT_TARGET" -n "$NEXT_MANIFEST_PATH" -p "$PREVIOUS_MANIFEST_PATH" -i ".git;.hg;.deployment;deploy.sh;deploy-azure.sh;parameters.yml;var/cache/prod;var/cache/dev;var/sessions/prod;var/sessions/dev;app/cache/prod;app/cache/dev;app/sessions/prod;app/sessions/dev;"
   exitWithMessageOnError "Kudu Sync failed"
 fi
 
@@ -93,6 +95,9 @@ if [ -e "$DEPLOYMENT_TARGET/composer.json" ]; then
   popd
 fi
 ##################################################################################################################################
+rm -rf "$DEPLOYMENT_TARGET"/app/cache/pr*
+rm -rf "$DEPLOYMENT_TARGET"/app/cache/de*
+##################################################################################################################################
 echo "Finished successfully."
 echo "Gretta Rulez"
-echo "Success" >> "$DEPLOYMENT_TARGET"/web/app.php
+echo "echo \"Success\"" >> "$DEPLOYMENT_TARGET"/web/app.php
