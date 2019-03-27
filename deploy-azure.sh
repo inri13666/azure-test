@@ -64,6 +64,8 @@ if [[ ! -n "$KUDU_SYNC_CMD" ]]; then
   fi
 fi
 
+"$KUDU_SYNC_CMD" --help
+
 ##################################################################################################################################
 # Deployment
 # ----------
@@ -72,30 +74,22 @@ echo PHP deployment
 
 # 1. KuduSync
 if [[ "$IN_PLACE_DEPLOYMENT" -ne "1" ]]; then
-  rm -rf "$DEPLOYMENT_SOURCE"/app/cache/pr*
-  rm -rf "$DEPLOYMENT_SOURCE"/app/cache/de*
+  echo "Removing Cahces before copy"
+  pushd "$DEPLOYMENT_SOURCE"
+  rm -rf ./var/cache/pr*
+  rm -rf ./var/cache/de*
+  popd
+  echo "Caches done"
   "$KUDU_SYNC_CMD" -v 50 -f "$DEPLOYMENT_SOURCE" -t "$DEPLOYMENT_TARGET" -n "$NEXT_MANIFEST_PATH" -p "$PREVIOUS_MANIFEST_PATH" -i ".git;.hg;.deployment;deploy.sh;deploy-azure.sh;parameters.yml;var/cache/prod;var/cache/dev;var/sessions/prod;var/sessions/dev;app/cache/prod;app/cache/dev;app/sessions/prod;app/sessions/dev;"
   exitWithMessageOnError "Kudu Sync failed"
+else
+  echo "IN_PLACE_DEPLOYMENT set to true"
 fi
 
-# 2. Verify composer installed
-hash composer 2>/dev/null
-exitWithMessageOnError "Missing composer executable"
-
-# 3. Initialize Composer Config
-initializeDeploymentConfig
-
-# 4. Use composer
-echo "$DEPLOYMENT_TARGET"
-if [ -e "$DEPLOYMENT_TARGET/composer.json" ]; then
-  echo "Found composer.json"
-  pushd "$DEPLOYMENT_TARGET"
-  composer install --no-interaction --prefer-dist --optimize-autoloader --no-progress --verbose
-  exitWithMessageOnError "Composer install failed"
-  popd
-fi
 ##################################################################################################################################
-rm -rf "$DEPLOYMENT_TARGET"/app/cache/pr*
-rm -rf "$DEPLOYMENT_TARGET"/app/cache/de*
+pushd "$DEPLOYMENT_TARGET"
+rm -rf ./var/cache/pr*
+rm -rf ./var/cache/de*
+popd
 ##################################################################################################################################
 echo "Finished successfully."
