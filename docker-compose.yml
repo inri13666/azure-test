@@ -1,0 +1,15 @@
+version: '3'
+services:
+    nginx:
+        container_name: azure_test_nginx
+        image: inri13666/azure-php-base:latest
+        env_file:
+            - "./.docker/.env"
+        volumes:
+            - "./:/home/site/wwwroot"
+            - "./.docker/LogFiles:/home/LogFiles"
+        ports:
+            #NGINX
+            - "9666:8000"
+            #SSH
+            - "2222:2222"
